@@ -6,6 +6,11 @@ Objectives:
 * Smart handling of data
 * Display on an HTML interface
 
+Run:
 
+* Install Python 3
+* Install pip
+* `pip install bottle`
+* Go to `http://localhost:8080/hello`
 
 

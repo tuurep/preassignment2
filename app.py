@@ -1,14 +1,17 @@
-from bottle import route, run
-import numpy as np
+from bottle import route, run, template
 
-@route('/hello')
-def hello():
-  return "Hello World!"
+def parse_file(input):
+  f = open(input, "r")
+  lines = []
 
-@route('/file_dump')
-def file_dump():
-  f = open("statusfile.txt", "r")
-  lines = f.readlines()
+  for line in f.readlines(100000):
+    lines.append('<p>{}</p>'.format(line))
+
+  f.close()
   return lines
 
-run(host='localhost', port=8080, debug=True)
+@route('/')
+def index():
+  return parse_file("statusfile.txt")
+
+run(host='localhost', port=8080, debug=True, reloader=True)

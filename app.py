@@ -6,7 +6,8 @@ def parse_file(input):
 
   for line in f.readlines():
     if line.startswith('Package:'):
-      lines.append(str.split(line)[1])
+      after_whitespace = str.split(line)[1]
+      lines.append(after_whitespace)
 
   f.close()
 

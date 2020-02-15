@@ -2,10 +2,12 @@ from bottle import route, run, template
 
 def parse_file(input):
   f = open(input, "r")
+  keywords = ('Package:', 'Description:', "Depends:")
   lines = []
 
-  for line in f.readlines(100000):
-    lines.append('<p>{}</p>'.format(line))
+  for line in f.readlines():
+    if line.startswith(keywords):
+      lines.append('<p>{}</p>'.format(line))
 
   f.close()
   return lines

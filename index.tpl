@@ -1,10 +1,10 @@
-<b>List of packages:</b>
+<h2>List of packages:</h2>
 <ul>
-%for name in pkg_names:
-  <li>
-    <a href={{ name }}>
-      {{ name }}
-    </a>
-  </li>
-%end
+  %for pkg in pkgs_ordered:
+    <li>
+      <a href={{ pkg }}>
+        {{ pkg }}
+      </a>
+    </li>
+  %end
 </ul>

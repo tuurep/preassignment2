@@ -1,51 +1,74 @@
 from bottle import route, run, template
 
-def filter_fields(input):
-  fields_as_str = []
+def add_reverse_dependencies(pkgs):
+  for pkg in pkgs:
+    for dep in pkgs[pkg]["dependencies"]:
+      if dep in pkgs:
+        pkgs[dep]["reverse_dependencies"].append(pkg)
 
-  oneliner = ('Package:', 'Depends:')
-  multiliner = ('Description:')
-  description_end = ('Original-Maintainer', 'Homepage:')
+def without_field_header(line):
+  # Returns line without the first word
+  return line.split(' ', 1)[1].strip()
+
+def cut_version_numbers(dep_list):
+  without_ver = []
+
+  for dep in dep_list:
+    without_ver.append(str.split(dep)[0])
+
+  return without_ver
+
+def file_to_dict(input):
+  pkgs = {}
+
+  # Loop variables
   concat_multiliner = False
-  multiline_str = ''
+  d_paragraph = ''
+  current_key = ''
 
   f = open(input, "r")
   
   for line in f.readlines():
-    if line.startswith(oneliner):
-      fields_as_str.append('<p>{}</p>'.format(line))
+    if line.startswith('Package:'):
+      current_key = without_field_header(line)
+      pkgs[current_key] = {
+                            "description": [],
+                            "dependencies": [],
+                            "reverse_dependencies": []
+                          }
 
-    if line.startswith(multiliner):
-      multiline_str = '<p>'
-      concat_multiliner = True
+    if line.startswith('Depends:'):
+      list_as_str = without_field_header(line)
+      dep_list = list_as_str.split(', ')
+      dep_list = cut_version_numbers(dep_list)
+      pkgs[current_key]["dependencies"] = dep_list
 
     if concat_multiliner:
       if line.startswith(' .'):
-        multiline_str += '</p><p>'
+        pkgs[current_key]["description"].append(d_paragraph)
+        d_paragraph = ''
       
-      elif not line.startswith(description_end):
-        multiline_str += line
-        
-      else:
-        fields_as_str.append(multiline_str + '</p>')
-        multiline_str = ''
+      elif line.startswith(('Original-Maintainer', 'Homepage:')):
+        pkgs[current_key]["description"].append(d_paragraph)
+        d_paragraph = ''
         concat_multiliner = False
-
+      
+      else:
+        d_paragraph += line
+        
+    if line.startswith('Description:'):
+      d_paragraph = without_field_header(line)
+      concat_multiliner = True
+  
   f.close()
 
-  return fields_as_str
+  add_reverse_dependencies(pkgs)
 
-def file_to_dict(input):
-  packages = {}
-
-  for field in filter_fields(input):
-    pass
-
-  return packages
+  return pkgs
 
 @route('/')
 def index():
-  return filter_fields('statusfile.txt')
+  return file_to_dict('statusfile.txt')
   # return template('index', packages=file_to_dict('statusfile.txt'))
 
 @route('/<pkg_name>')

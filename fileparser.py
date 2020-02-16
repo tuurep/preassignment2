@@ -55,7 +55,8 @@ def file_to_dict(input):
         d_paragraph += line
         
     if line.startswith('Description:'):
-      d_paragraph = without_field_header(line)
+      description_firstline = without_field_header(line)
+      pkgs[current_key]["description"].append(description_firstline)
       concat_multiliner = True
   
   f.close()

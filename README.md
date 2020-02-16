@@ -14,4 +14,6 @@ Run:
 * `python app.py`
 * Go to `http://localhost:8080/`
 
+By default you will see the package data of my Ubuntu system as it was on 16.2.2020.
 
+If you're on Debian/Ubuntu, you can use your own system's data by passing `/var/lib/dpkg/status` (text file) to the `file_to_dict` method.

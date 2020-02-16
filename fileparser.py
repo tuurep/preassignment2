@@ -9,6 +9,7 @@ def without_field_header(line):
   return line.split(' ', 1)[1].strip()
 
 def cut_version_numbers(dep_list):
+  # Note: this also fixes the | (pipe character) problem
   without_ver = []
 
   for dep in dep_list:

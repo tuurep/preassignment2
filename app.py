@@ -4,6 +4,8 @@ from fileparser import file_to_dict
 @route('/')
 def index():
   pkgs = file_to_dict('statusfile.txt')
+  # The file is a copy of /var/lib/dpkg/status
+  # Copied 16.2.2020 on my Ubuntu
 
   pkgs_arr = []
   for pkg in pkgs:

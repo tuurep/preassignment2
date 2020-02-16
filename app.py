@@ -21,7 +21,6 @@ def cut_version_numbers(dep_list):
 def file_to_dict(input):
   pkgs = {}
 
-  # Loop variables
   concat_multiliner = False
   d_paragraph = ''
   current_key = ''
@@ -66,13 +65,25 @@ def file_to_dict(input):
 
   return pkgs
 
+
 @route('/')
 def index():
-  return file_to_dict('statusfile.txt')
-  # return template('index', packages=file_to_dict('statusfile.txt'))
+  pkgs=file_to_dict('statusfile.txt')
+
+  pkgs_arr = []
+  for pkg in pkgs:
+    pkgs_arr.append(pkg)
+
+  return template('index', pkgs_ordered=sorted(pkgs_arr))
 
 @route('/<pkg_name>')
 def info(pkg_name):
-  return template('pkg_info', pkg_name=pkg_name)
+  pkgs = file_to_dict('statusfile.txt')
+
+  if pkg_name not in pkgs:
+    return '''<p>Package {} was not found</p>
+              <a href="/">Back to index</a>'''.format(pkg_name)
+
+  return template('pkg_info', pkg_name=pkg_name, pkg=pkgs[pkg_name])
 
 run(host='localhost', port=8080, debug=True, reloader=True)

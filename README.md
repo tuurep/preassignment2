@@ -11,6 +11,7 @@ Run:
 * Install Python 3
 * Install pip
 * `pip install bottle`
+* `python app.py`
 * Go to `http://localhost:8080/`
 
 

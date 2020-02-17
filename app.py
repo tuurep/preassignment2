@@ -1,11 +1,13 @@
 from bottle import route, run, template
 from fileparser import file_to_dict
 
-@route('/')
-def index():
-  pkgs = file_to_dict('statusfile.txt')
+input_file = 'statusfile.txt'
   # The file is a copy of /var/lib/dpkg/status
   # Copied 16.2.2020 on my Ubuntu
+
+@route('/')
+def index():
+  pkgs = file_to_dict(input_file)
 
   pkgs_arr = []
   for pkg in pkgs:
@@ -15,7 +17,7 @@ def index():
 
 @route('/<pkg_name>')
 def info(pkg_name):
-  pkgs = file_to_dict('statusfile.txt')
+  pkgs = file_to_dict(input_file)
 
   if pkg_name not in pkgs:
     return '''<h3>Package {} was not found</h3>

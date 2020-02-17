@@ -6,22 +6,21 @@ def add_reverse_dependencies(pkgs):
 
 def without_field_header(line):
   # Returns line without the first word
+  # Remove trailing whitespace (package name always has it)
   return line.split(' ', 1)[1].strip()
 
-def cut_version_numbers(dep_list):
-  """ 
-  Notes: 
-    This also fixes the | (pipe character) problem.
-    Can sometimes repeat a dependency, I only 
-    encountered this on packages git and git-man.
-    Not too big of a deal in this context.
-  """
-  without_ver = []
+def without_version_numbers(dep):
+  return str.split(dep)[0]
+
+def clean_dependencies(dep_list):
+  cleaned = []
 
   for dep in dep_list:
-    without_ver.append(str.split(dep)[0])
+    dep_alternatives = dep.split('|')
+    for alt in dep_alternatives:
+      cleaned.append(without_version_numbers(alt))
 
-  return without_ver
+  return cleaned
 
 def file_to_dict(input):
   pkgs = {}
@@ -57,7 +56,7 @@ def file_to_dict(input):
     if line.startswith('Depends:'):
       list_as_str = without_field_header(line)
       dep_list = list_as_str.split(', ')
-      dep_list = cut_version_numbers(dep_list)
+      dep_list = clean_dependencies(dep_list)
       pkgs[current_key]["dependencies"] = dep_list
         
     if line.startswith('Description:'):

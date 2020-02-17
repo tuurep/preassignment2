@@ -18,7 +18,9 @@ def clean_dependencies(dep_list):
   for dep in dep_list:
     dep_alternatives = dep.split('|')
     for alt in dep_alternatives:
-      cleaned.append(without_version_numbers(alt))
+      alt = without_version_numbers(alt)
+      if not alt in cleaned:
+        cleaned.append(alt)
 
   return cleaned
 

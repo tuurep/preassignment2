@@ -27,6 +27,19 @@ def file_to_dict(input):
   f = open(input, "r")
   
   for line in f.readlines():
+    if concat_multiliner:
+      if line.startswith(' .'):
+        pkgs[current_key]["description"].append(d_paragraph)
+        d_paragraph = ''
+      
+      elif line.startswith(('Original-Maintainer', 'Homepage:', 'Package:')):
+        pkgs[current_key]["description"].append(d_paragraph)
+        d_paragraph = ''
+        concat_multiliner = False
+      
+      else:
+        d_paragraph += line
+
     if line.startswith('Package:'):
       current_key = without_field_header(line)
       pkgs[current_key] = {
@@ -40,19 +53,6 @@ def file_to_dict(input):
       dep_list = list_as_str.split(', ')
       dep_list = cut_version_numbers(dep_list)
       pkgs[current_key]["dependencies"] = dep_list
-
-    if concat_multiliner:
-      if line.startswith(' .'):
-        pkgs[current_key]["description"].append(d_paragraph)
-        d_paragraph = ''
-      
-      elif line.startswith(('Original-Maintainer', 'Homepage:')):
-        pkgs[current_key]["description"].append(d_paragraph)
-        d_paragraph = ''
-        concat_multiliner = False
-      
-      else:
-        d_paragraph += line
         
     if line.startswith('Description:'):
       description_firstline = without_field_header(line)

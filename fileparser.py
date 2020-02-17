@@ -9,7 +9,13 @@ def without_field_header(line):
   return line.split(' ', 1)[1].strip()
 
 def cut_version_numbers(dep_list):
-  # Note: this also fixes the | (pipe character) problem
+  """ 
+  Notes: 
+    This also fixes the | (pipe character) problem.
+    Can sometimes repeat a dependency, I only 
+    encountered this on packages git and git-man.
+    Not too big of a deal in this context.
+  """
   without_ver = []
 
   for dep in dep_list:

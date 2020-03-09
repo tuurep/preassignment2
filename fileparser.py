@@ -25,6 +25,12 @@ def clean_dependencies(dep_list):
   return cleaned
 
 def file_to_dict(input):
+  # This function is too large
+  # An example of bad modularity and readability/naming
+  # Doesn't allow subfunctionality to be tested
+
+  # I will just leave it, this is finished.
+
   pkgs = {}
 
   concat_multiliner = False
